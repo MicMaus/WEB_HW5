@@ -23,6 +23,7 @@ class Server:
 
     async def send_to_clients(self, message: str):
         if self.clients:
+            # print(f"server ws check message: {message}")
             [await client.send(message) for client in self.clients]
 
     async def ws_handler(self, ws: WebSocketServerProtocol):

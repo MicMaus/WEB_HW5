@@ -3,9 +3,6 @@ import asyncio
 from datetime import datetime, timedelta
 import re
 
-# list of currencies to be displayed, could be appended base on user commands:
-# currencies = ["USD", "EUR"]
-
 
 # generate list of links based on user input:
 async def links_creator(days_input):
@@ -51,6 +48,8 @@ async def data_generator(session, link, currencies):
 
 
 # mapping of collected data with required format:
+
+
 async def content_formatter(content_dict, currencies):
     date = content_dict["date"]
     result = f"{date}:\n "
@@ -66,14 +65,14 @@ async def content_formatter(content_dict, currencies):
                 )
 
     # notification in case some of additional currencies do not exist in api:
-    cur_not_found = []
+    cur_not_found = str()
     for cur in currencies:
         if not cur in result:
-            cur_not_found.append(
-                f"requested currency {cur} does not exist in api for day: {date};\n"
+            cur_not_found = cur_not_found + (
+                f"requested currency {cur} does not exist in api for day: {date};\n "
             )
     if cur_not_found:
-        return result, cur_not_found
+        result = result + cur_not_found
 
     return result
 
