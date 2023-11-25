@@ -53,8 +53,8 @@ async def data_generator(session, link, currencies):
 async def content_formatter(content_dict, currencies):
     date = content_dict["date"]
     result = f"{date}:\n "
-    print(f"check curren list: {currencies}")
     for cur in currencies:
+        print(f"check curren list: {cur}")
         for rate_dict in content_dict["exchangeRate"]:
             if rate_dict["currency"] == cur:
                 cur_sale = rate_dict["saleRateNB"]
@@ -78,13 +78,18 @@ async def content_formatter(content_dict, currencies):
 
 
 async def parser(message):
+    print(type(message))
     currencies = ["USD", "EUR"]
     days_input = "".join(re.findall(r"\d", message))
     pattern = re.compile(r"\b(?!exchange\b)\D+\b")
     additional_currencies = pattern.findall(message)
     additional_currencies = [currency.strip() for currency in additional_currencies]
     additional_currencies = list(filter(None, additional_currencies))
-    currencies.extend(additional_currencies)
+
+    divided_cur = re.split(",", str(additional_currencies[0]))
+    for el in divided_cur:
+        currencies.append(el.strip())
+
     links_list = await links_creator(days_input)
     return links_list, currencies
 
